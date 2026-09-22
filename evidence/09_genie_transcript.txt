@@ -1,0 +1,137 @@
+=== DSV Genie space — natural-language Q&A transcript ===
+space_id: 01f1b68e95721a3794aeba7cf820b791  · warehouse 74ec803467a6bcfb · 2026-09-22T14:06:15Z
+Questions asked via the Genie Conversation API (real SQL + real results).
+
+----------------------------------------------------------------------
+Q1: What is our overall First-Time-Right rate?
+Generated SQL:
+```sql
+SELECT AVG(CAST(`first_time_right` AS INT)) AS ftr_rate FROM `dsv`.`silver`.`bookings_clean`
+```
+
+Answer:
+The overall First-Time-Right (FTR) rate is **82.3%** based on all booking records in the dataset. This means that 82.3% of bookings required no manual correction.
+
+
+----------------------------------------------------------------------
+Q2: Show First-Time-Right rate by booking channel.
+Generated SQL:
+```sql
+SELECT `channel`, AVG(`first_time_right`::int) AS ftr_rate, COUNT(*) AS bookings FROM `dsv`.`silver`.`bookings_clean` WHERE `channel` IS NOT NULL GROUP BY `channel` ORDER BY ftr_rate DESC
+```
+
+Answer:
+The **First-Time-Right rate** is highest for the **API channel** at 89.3%, followed by EDI at 88.2%, and lowest for FAX_OCR at 56.5%. All channels show a notable difference, with manual channels (EMAIL, PORTAL, FAX_OCR) having lower rates than electronic channels (API, EDI). This suggests bookings made through electronic channels are more likely to be correct without manual intervention.
+
+
+----------------------------------------------------------------------
+Q3: What share of bookings arrive via automated channels (API or EDI) each month?
+Generated SQL:
+```sql
+SELECT `booking_month`, `electronic_share` FROM `dsv`.`gold`.`quality_monthly_trend` WHERE `booking_month` IS NOT NULL AND `electronic_share` IS NOT NULL ORDER BY `booking_month` ASC
+```
+
+Answer:
+The share of bookings arriving via automated channels (API or EDI) each month ranges from **61.33%** to **62.64%** over the period shown. Examples include:
+- **62.05%** in January 2025
+- **62.27%** in June 2025
+- **62.63%** in December 2025
+- **61.33%** in April 2026
+- **62.64%** in May 2026
+
+Overall, the electronic share remains consistently above 61% each month.
+
+
+----------------------------------------------------------------------
+Q4: Which trade lanes have the highest volume?
+Generated SQL:
+```sql
+SELECT `lane`, SUM(`bookings`) AS `total_bookings`
+FROM `dsv`.`gold`.`lane_concentration`
+WHERE `lane` IS NOT NULL
+GROUP BY `lane`
+ORDER BY `total_bookings` DESC
+```
+
+Answer:
+The trade lanes with the highest volume are:
+- **AMS-FRA** with 7,783 bookings
+- **FRA-AMS** with 7,776 bookings
+- **FRA-CPH** with 6,090 bookings
+- **CPH-FRA** with 5,924 bookings
+- **AMS-CPH** with 5,680 bookings
+
+
+----------------------------------------------------------------------
+Q5: What is the average booking lead time by mode?
+Generated SQL:
+```sql
+SELECT `mode`, AVG(`lead_time_days`) AS avg_lead_time_days
+FROM `dsv`.`silver`.`bookings_clean`
+WHERE `mode` IS NOT NULL AND `lead_time_days` IS NOT NULL
+GROUP BY `mode`
+```
+
+Answer:
+The **average booking lead time** is **5.20 days for AIR**, **5.21 days for ROAD**, and **5.19 days for OCEAN**. All three modes have very similar average lead times, with ROAD being slightly higher than the others.
+
+
+----------------------------------------------------------------------
+Q6: Which completeness defect is most common on FAX_OCR bookings?
+Generated SQL:
+```sql
+SELECT 'rate_missing_address' AS defect, dsv.gold.completeness_breakdown.rate_missing_address AS rate
+FROM dsv.gold.completeness_breakdown
+WHERE dsv.gold.completeness_breakdown.channel = 'FAX_OCR'
+UNION ALL
+SELECT 'rate_missing_customs_doc', dsv.gold.completeness_breakdown.rate_missing_customs_doc
+FROM dsv.gold.completeness_breakdown
+WHERE dsv.gold.completeness_breakdown.channel = 'FAX_OCR'
+UNION ALL
+SELECT 'rate_wrong_weight', dsv.gold.completeness_breakdown.rate_wrong_weight
+FROM dsv.gold.completeness_breakdown
+WHERE dsv.gold.completeness_breakdown.channel = 'FAX_OCR'
+UNION ALL
+SELECT 'rate_missing_service_code', dsv.gold.completeness_breakdown.rate_missing_service_code
+FROM dsv.gold.completeness_breakdown
+WHERE dsv.gold.completeness_breakdown.channel = 'FAX_OCR'
+ORDER BY rate DESC
+LIMIT 1
+```
+
+Answer:
+For FAX_OCR bookings, the most common completeness defect is **missing customs documentation**, with a rate of **16.47%**.
+
+
+----------------------------------------------------------------------
+Q7: What is the no-show rate by month?
+Generated SQL:
+```sql
+SELECT `booking_month`, `no_show_rate` FROM `dsv`.`gold`.`quality_monthly_trend` WHERE `booking_month` IS NOT NULL AND `no_show_rate` IS NOT NULL ORDER BY `booking_month` ASC
+```
+
+Answer:
+The monthly no-show rate ranged from **1.17% to 1.49%** over the period shown. Some of the most recent values are:
+- **June 2026:** 1.49%
+- **May 2026:** 1.31%
+- **April 2026:** 1.23%
+- **March 2026:** 1.20%
+- **February 2026:** 1.34%
+
+The no-show rate remained relatively stable, with a slight increase in June 2026.
+
+
+----------------------------------------------------------------------
+Q8: What are the top GenAI defect categories?
+Generated SQL:
+```sql
+SELECT `defect_category`, COUNT(*) AS defect_count
+FROM `dsv`.`gold`.`defect_classification_flat`
+WHERE `defect_category` IS NOT NULL
+GROUP BY `defect_category`
+ORDER BY defect_count DESC
+```
+
+Answer:
+The top defect categories by count are **CUSTOMS** (113), **ADDRESS** (68), and **WEIGHT_DIMS** (28). Other notable categories include **HAZMAT** (25), **SCHEDULING** (23), **DUPLICATE** (22), and **SERVICE_CODE** (21). **CUSTOMS** defects are the most frequent, accounting for a significantly higher number than the other categories.
+

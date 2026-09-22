@@ -62,7 +62,7 @@ def main():
         X, y, test_size=0.25, random_state=42, stratify=y)
 
     pre = ColumnTransformer([
-        ("cat", OneHotEncoder(handle_unknown="ignore"), CATEGORICAL),
+        ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), CATEGORICAL),
     ], remainder="passthrough")
 
     clf = Pipeline([

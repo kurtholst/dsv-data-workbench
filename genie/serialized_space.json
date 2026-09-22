@@ -1,0 +1,66 @@
+{
+  "version": 2,
+  "data_sources": {
+    "tables": [
+      {
+        "identifier": "dsv.gold.booking_velocity"
+      },
+      {
+        "identifier": "dsv.gold.completeness_breakdown"
+      },
+      {
+        "identifier": "dsv.gold.defect_classification_flat"
+      },
+      {
+        "identifier": "dsv.gold.lane_concentration"
+      },
+      {
+        "identifier": "dsv.gold.quality_by_channel"
+      },
+      {
+        "identifier": "dsv.gold.quality_monthly_trend"
+      },
+      {
+        "identifier": "dsv.gold.volume_daily_by_mode"
+      },
+      {
+        "identifier": "dsv.silver.bookings_clean"
+      }
+    ]
+  },
+  "instructions": {
+    "text_instructions": [
+      {
+        "id": "a9bcb936040f44fea958402b54985087",
+        "content": [
+          "This is a freight-forwarding / Parcel Express dataset; a booking is a shipment order.\n",
+          "- First-Time-Right (FTR) = first_time_right=true (no manual correction). Report as percentage via avg(first_time_right::int).\n",
+          "- Automation / electronic-integration share = share with channel IN ('API','EDI') (is_electronic=true); EMAIL, PORTAL, FAX_OCR are manual.\n",
+          "- Amendment rate = share with amendment_count>0. No-show = no_show=true.\n",
+          "- Lane = origin_hub-destination_hub. Capacity utilization = booked_capacity/available_capacity. Booking velocity = lead_time_days.\n",
+          "- Modes AIR/OCEAN/ROAD. Time grains: booking_month/booking_week/booking_date. Prefer gold marts; silver.bookings_clean for drill-down."
+        ]
+      }
+    ],
+    "example_question_sqls": [
+      {
+        "id": "ccb58609cf8542bcad6da9a5515c2fe3",
+        "question": [
+          "Top lanes by volume"
+        ],
+        "sql": [
+          "SELECT lane, sum(bookings) AS bookings FROM dsv.gold.lane_concentration GROUP BY lane ORDER BY bookings DESC LIMIT 10"
+        ]
+      },
+      {
+        "id": "f79bec5883804b428bdc3d0360ed114f",
+        "question": [
+          "FTR by channel"
+        ],
+        "sql": [
+          "SELECT channel, round(avg(first_time_right::int),4) AS ftr_rate, count(*) AS bookings FROM dsv.silver.bookings_clean GROUP BY channel ORDER BY ftr_rate DESC"
+        ]
+      }
+    ]
+  }
+}

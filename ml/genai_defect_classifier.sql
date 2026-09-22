@@ -31,19 +31,19 @@ SELECT
       'Classify the booking defect below into exactly one category from this set: ',
       'ADDRESS, CUSTOMS, WEIGHT_DIMS, SERVICE_CODE, DUPLICATE, SCHEDULING, HAZMAT, OTHER. ',
       'Then give a one-sentence, actionable remediation. ',
-      'Return strict JSON: {"category": "...", "remediation": "..."}. ',
       'Defect: ', defect_reason
     ),
-    responseFormat => 'STRUCT<category:STRING, remediation:STRING>'
+    -- single top-level field is required; ai_query returns a JSON string here
+    responseFormat => 'STRUCT<result:STRUCT<category:STRING, remediation:STRING>>'
   ) AS classification
 FROM failed;
 
--- Flatten for easy analysis / serving
+-- Flatten for easy analysis / serving (classification lands as a JSON string)
 CREATE OR REPLACE VIEW dsv.gold.defect_classification_flat AS
 SELECT
   booking_id, channel, mode, lane, defect_reason,
-  classification.category    AS defect_category,
-  classification.remediation AS remediation
+  from_json(classification, 'STRUCT<category:STRING, remediation:STRING>').category    AS defect_category,
+  from_json(classification, 'STRUCT<category:STRING, remediation:STRING>').remediation AS remediation
 FROM dsv.gold.defect_classification;
 
 -- Evidence query: category distribution by channel
