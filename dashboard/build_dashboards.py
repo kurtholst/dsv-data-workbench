@@ -18,12 +18,26 @@ PARENT = "/Workspace/Users/kurt.holst@databricks.com"
 HOST = "https://dbc-0e21d0b3-3b8f.cloud.databricks.com"
 
 
+def _fix_table_widgets(dash: LakeviewDashboard) -> str:
+    """The builder emits table widgets as version 1; the current Lakeview schema
+    requires version 2 with an `allowHTMLByDefault` property, otherwise the widget
+    is rejected as an invalid definition. Patch tables before serializing."""
+    sd = dash.to_dict()
+    for page in sd.get("pages", []):
+        for w in page.get("layout", []):
+            spec = w.get("widget", {}).get("spec", {})
+            if spec.get("widgetType") == "table":
+                spec["version"] = 2
+                spec.setdefault("allowHTMLByDefault", False)
+    return json.dumps(sd)
+
+
 def deploy(dash: LakeviewDashboard, display_name: str) -> str:
     body = {
         "display_name": display_name,
         "warehouse_id": WAREHOUSE,
         "parent_path": PARENT,
-        "serialized_dashboard": dash.to_json(),
+        "serialized_dashboard": _fix_table_widgets(dash),
     }
     p = "/tmp/_lv_body.json"
     open(p, "w").write(json.dumps(body))
