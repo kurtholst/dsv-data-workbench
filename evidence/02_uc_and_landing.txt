@@ -1,0 +1,35 @@
+=== DSV Data Workbench — Unity Catalog + raw landing (workspace dbc-0e21d0b3-3b8f, eu-central-1) ===
+Run at: 2026-09-22T13:48:16Z  by kurt.holst@databricks.com
+
+-- Catalog / schemas created --
+COLS: ['schema_name', 'comment']
+['bronze', 'Raw ingested bookings (as-landed).']
+['default', 'Default schema (auto-created)']
+['gold', 'Business KPI marts.']
+['information_schema', 'Information schema (auto-created)']
+['ml', 'ML models, features, scored outputs.']
+['silver', 'Cleaned, typed bookings with quality flags.']
+
+-- Volumes --
+COLS: ['volume_schema', 'volume_name']
+['bronze', 'raw_landing']
+['ml', 'eval']
+
+-- Catalog tags (UC tag policy enforced: domain restricted to governed values) --
+COLS: ['tag_name', 'tag_value']
+['lob', 'parcel_express']
+['domain', 'operations']
+
+-- Raw files landed in /Volumes/dsv/bronze/raw_landing/ --
+bookings_part_00.jsonl
+bookings_part_01.jsonl
+bookings_part_02.jsonl
+bookings_part_03.jsonl
+bookings_part_04.jsonl
+bookings_part_05.jsonl
+bookings_part_06.jsonl
+bookings_part_07.jsonl
+
+-- Raw row count (read_files over JSON shards) --
+COLS: ['raw_rows']
+['400000']

@@ -1,0 +1,32 @@
+=== DSV Lakeflow pipeline — run evidence ===
+pipeline_id: dc240222-2616-48fe-a518-4992501fa845  name: dsv-bookings-medallion
+update_id: 31cb3362-6832-4f89-835f-6ac9422f463e
+Run at (UTC): 2026-09-22T13:51:31Z
+
+pipeline_state: IDLE
+latest_update_state: COMPLETED
+creation_time: 2026-09-22T13:49:05.448Z
+serverless: True
+catalog: dsv
+
+-- Per-layer row counts --
+bronze.raw_bookings:
+COLS: ['rows']
+['400000']
+silver.bookings_clean:
+COLS: ['rows']
+['400000']
+
+-- Gold marts (row counts) --
+volume_daily_by_mode       COLS: ['count(1)']
+['1620']
+lane_concentration         COLS: ['count(1)']
+['675']
+booking_velocity           COLS: ['count(1)']
+['390']
+quality_by_channel         COLS: ['count(1)']
+['5']
+completeness_breakdown     COLS: ['count(1)']
+['5']
+quality_monthly_trend      COLS: ['count(1)']
+['18']

@@ -18,5 +18,10 @@ CREATE VOLUME IF NOT EXISTS dsv.bronze.raw_landing
 
 -- ---------------------------------------------------------------------------
 -- Catalog-level tags (data classification / domain metadata)
+-- NOTE: this workspace enforces a UC tag policy — `domain` is restricted to a
+-- governed value set (sales, customer, operations, ...). We use `operations`
+-- and a free-form `lob` key. (A `data_class` policy key also exists but only
+-- allows PII-style values, so we omit it here.)
 -- ---------------------------------------------------------------------------
-ALTER CATALOG dsv SET TAGS ('domain' = 'supply_chain', 'lob' = 'parcel_express', 'data_class' = 'synthetic');
+ALTER CATALOG dsv SET TAGS ('domain' = 'operations');
+ALTER CATALOG dsv SET TAGS ('lob' = 'parcel_express');
