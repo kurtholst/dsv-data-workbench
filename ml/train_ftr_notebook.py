@@ -17,12 +17,12 @@ import mlflow, mlflow.sklearn
 from mlflow.models.signature import infer_signature
 from pyspark.sql import functions as F
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (classification_report, confusion_matrix,
                              roc_auc_score, average_precision_score)
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 CATALOG = "dsv"
 UC_MODEL = f"{CATALOG}.ml.ftr_risk_classifier"
@@ -46,11 +46,12 @@ X = pdf[CATEGORICAL + NUMERIC]
 y = pdf[TARGET]
 X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
 
-pre = ColumnTransformer([("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), CATEGORICAL)], remainder="passthrough")
+pre = ColumnTransformer([
+    ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), CATEGORICAL),
+    ("num", StandardScaler(), NUMERIC),
+])
 clf = Pipeline([("pre", pre),
-                ("rf", RandomForestClassifier(n_estimators=200, max_depth=14,
-                                              min_samples_leaf=20, n_jobs=-1,
-                                              class_weight="balanced", random_state=42))])
+                ("lr", LogisticRegression(max_iter=1000, class_weight="balanced", C=1.0))])
 
 with mlflow.start_run(run_name="ftr_risk_classifier") as run:
     clf.fit(X_tr, y_tr)
@@ -60,8 +61,8 @@ with mlflow.start_run(run_name="ftr_risk_classifier") as run:
     report = classification_report(y_te, pred, digits=3)
     cm = confusion_matrix(y_te, pred)
 
-    mlflow.log_params({"model": "RandomForestClassifier", "n_estimators": 200,
-                       "max_depth": 14, "min_samples_leaf": 20,
+    mlflow.log_params({"model": "LogisticRegression", "C": 1.0,
+                       "class_weight": "balanced", "max_iter": 1000,
                        "n_train": len(X_tr), "n_test": len(X_te)})
     mlflow.log_metrics({"roc_auc": float(auc), "avg_precision": float(ap),
                         "positive_rate": float(y.mean())})

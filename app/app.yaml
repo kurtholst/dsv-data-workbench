@@ -1,0 +1,21 @@
+command:
+  - "python"
+  - "-m"
+  - "uvicorn"
+  - "app:app"
+  - "--host"
+  - "0.0.0.0"
+  - "--port"
+  - "8000"
+
+env:
+  - name: DATABRICKS_WAREHOUSE_ID
+    value: "74ec803467a6bcfb"
+  - name: DSV_CATALOG
+    value: "dsv"
+  - name: DSV_LLM_ENDPOINT
+    value: "databricks-claude-sonnet-4-6"
+  - name: DSV_ML_ENDPOINT
+    value: "dsv-ftr-risk"
+  - name: DSV_GENIE_SPACE_ID
+    value: "01f1b68e95721a3794aeba7cf820b791"

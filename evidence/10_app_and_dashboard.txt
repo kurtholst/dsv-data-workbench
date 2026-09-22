@@ -1,0 +1,74 @@
+=== DSV Data Workbench App — deployed endpoint evidence ===
+App URL: https://dsv-workbench-7474645762379949.aws.databricksapps.com
+App service principal: app-ph30no dsv-workbench (b6354378-88ef-4275-9de0-945b23a2d743)
+Captured: 2026-09-22T14:19:24Z (authenticated via OAuth; app is SSO-protected)
+
+### GET /healthz
+
+
+### GET /api/summary
+{"bookings":"400000","ftr_rate":"0.8234","automation_share":"0.6208","no_show_rate":"0.0129","amendment_rate":"0.2168","avg_lead_time_days":"5.21"}
+
+### GET /api/quality_by_channel
+[{"channel":"API","is_electronic":"true","bookings":"136362","ftr_rate":"0.8926","avg_defects_per_booking":"0.139","amendment_rate":"0.124","cancel_rate":"0.0206","no_show_rate":"0.0111"},{"channel":"EDI","is_electronic":"true","bookings":"111964","ftr_rate":"0.8818","avg_defects_per_booking":"0.154","amendment_rate":"0.1313","cancel_rate":"0.0213","no_show_rate":"0.0116"},{"channel":"PORTAL","is_electronic":"false","bookings":"55808","ftr_rate":"0.8384","avg_defects_per_booking":"0.211","amendment_rate":"0.1615","cancel_rate":"0.0232","no_show_rate":"0.0117"},{"channel":"EMAIL","is_electronic":"false","bookings":"64115","ftr_rate":"0.6892","avg_defects_per_booking":"0.4","amendment_rate":"0.4586","cancel_rate":"0.03","no_show_rate":"0.016"},{"channel":"FAX_OCR","is_electronic":"false","bookings":"31751","ftr_rate":"0.5649","avg_defects_per_booking":"0.554","amendment_rate":"0.5251","cancel_rate":"0.0367","no_show_rate":"0.0206"}]
+
+### GET /api/top_lanes (first 5)
+[
+ {
+  "lane": "AMS-FRA",
+  "mode": "ROAD",
+  "bookings": "3901",
+  "total_weight_kg": "73083.3",
+  "ftr_rate": "0.8347",
+  "avg_lead_time_days": "5.18"
+ },
+ {
+  "lane": "FRA-AMS",
+  "mode": "ROAD",
+  "bookings": "3861",
+  "total_weight_kg": "67761.7",
+  "ftr_rate": "0.8335",
+  "avg_lead_time_days": "5.08"
+ },
+ {
+  "lane": "FRA-CPH",
+  "mode": "ROAD",
+  "bookings": "3046",
+  "total_weight_kg": "57549.4",
+  "ftr_rate": "0.8332",
+  "avg_lead_time_days": "5.23"
+ },
+ {
+  "lane": "CPH-FRA",
+  "mode": "ROAD",
+  "bookings": "3009",
+  "total_weight_kg": "53869.1",
+  "ftr_rate": "0.8288",
+  "avg_lead_time_days": "5.25"
+ },
+ {
+  "lane": "AMS-CPH",
+  "mode": "ROAD",
+  "bookings": "2857",
+  "total_weight_kg": "50413.0",
+  "ftr_rate": "0.8344",
+  "avg_lead_time_days": "5.23"
+ }
+]
+
+
+### GET /api/defect_categories
+[{"defect_category":"CUSTOMS","n":"113"},{"defect_category":"ADDRESS","n":"68"},{"defect_category":"WEIGHT_DIMS","n":"28"},{"defect_category":"HAZMAT","n":"25"},{"defect_category":"SCHEDULING","n":"23"},{"defect_category":"DUPLICATE","n":"22"},{"defect_category":"SERVICE_CODE","n":"21"}]
+
+### GET /api/genie
+{"space_id":"01f1b68e95721a3794aeba7cf820b791","url":"dbc-0e21d0b3-3b8f.cloud.databricks.com/genie/rooms/01f1b68e95721a3794aeba7cf820b791"}
+
+======================================================================
+### Lakeview dashboards (published)
+- DSV Booking Quality: https://dbc-0e21d0b3-3b8f.cloud.databricks.com/dashboardsv3/01f1b68f91c213658750804855dc8418
+- DSV Booking Volume:  https://dbc-0e21d0b3-3b8f.cloud.databricks.com/dashboardsv3/01f1b68f924e1b84803bfe47a80397d9
+Both built by dashboard/build_dashboards.py against the dsv.gold marts and published.
+
+### Genie space
+- DSV Parcel Express — Data Workbench: /genie/rooms/01f1b68e95721a3794aeba7cf820b791
+  (see evidence/09_genie_transcript.txt for the natural-language Q&A transcript)

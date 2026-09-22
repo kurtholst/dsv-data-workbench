@@ -1,0 +1,31 @@
+=== DSV FTR Risk Classifier — training metrics ===
+MLflow run_id: ce16c4b6947241a783de6c1b6e77aff8
+UC model: dsv.ml.ftr_risk_classifier
+train rows: 300,000   test rows: 100,000
+target = needs_correction (1 = not first-time-right)
+positive rate (test): 0.1766
+
+ROC AUC:        0.6862
+Avg precision:  0.3273
+
+Classification report:
+              precision    recall  f1-score   support
+
+           0      0.884     0.768     0.822     82341
+           1      0.328     0.528     0.405     17659
+
+    accuracy                          0.726    100000
+   macro avg      0.606     0.648     0.613    100000
+weighted avg      0.785     0.726     0.748    100000
+
+Confusion matrix [[TN FP][FN TP]]:
+[[63279 19062]
+ [ 8342  9317]]
+--- Notes ---
+Model: dsv.ml.ftr_risk_classifier (Unity Catalog), version 1, MLflow run above.
+Features use ONLY booking-time fields (channel, mode, lane, customer_type, lead_time,
+weight/volume, capacity, international) so the score is available at booking submission.
+Target: needs_correction = NOT first_time_right. AUC 0.686; the model ranks manual/OCR,
+healthcare, and international bookings as materially higher risk — matching the FTR gradient
+in the gold marts. Recall on the positive class (0.53) means it flags over half of would-be
+defective bookings for pre-emptive review, the core of DSV's AI-factory automation goal.
