@@ -1,0 +1,9 @@
+# Raw synthetic landing files are large; regenerate with data_gen/generate_bookings.py
+data_gen/out/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+app/frontend/node_modules/
+.databrickscfg

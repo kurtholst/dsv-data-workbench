@@ -1,0 +1,30 @@
+=== SUMMARY (synthetic) ===
+rows: 400,000
+date range: 2025-01-01 06:00:14 .. 2026-06-24 19:57:30
+overall first_time_right: 0.823
+
+FTR by channel:
+channel
+API        0.893
+EDI        0.882
+EMAIL      0.689
+FAX_OCR    0.565
+PORTAL     0.838
+
+Channel mix (automation share):
+channel
+API        0.341
+EDI        0.280
+EMAIL      0.160
+PORTAL     0.140
+FAX_OCR    0.079
+
+Bookings by mode:
+mode
+ROAD     199966
+AIR      120151
+OCEAN     79883
+
+amendment rate (>0): 0.217
+cancel rate: 0.024  no-show rate: 0.013
+defect_reason populated: 0.177
