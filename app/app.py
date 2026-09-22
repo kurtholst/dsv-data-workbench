@@ -216,9 +216,13 @@ async function load(){
 async function scoreIt(){
   const c=channel.value,m=mode.value,ct=ctype.value;
   const r=await j(`/api/score?channel=${c}&mode=${m}&customer_type=${ct}`);
-  const risk=Array.isArray(r.needs_correction_risk)?r.needs_correction_risk[0]:r.needs_correction_risk;
-  const rv=(typeof risk==='object')?(risk.needs_correction||risk['1']||JSON.stringify(risk)):risk;
-  document.getElementById('riskout').innerHTML=`<div class="risk">${(100*(+rv)).toFixed(1)}% <span class="small">not-first-time-right risk</span></div>`;
+  let risk=Array.isArray(r.needs_correction_risk)?r.needs_correction_risk[0]:r.needs_correction_risk;
+  if(typeof risk==='object') risk=risk.needs_correction??risk['1']??risk['0'];
+  const flagged=(+risk)>=1||(+risk)>=0.5;
+  const label=flagged?'FLAG for pre-check':'Likely first-time-right';
+  const color=flagged?'#FF3621':'#00A972';
+  document.getElementById('riskout').innerHTML=`<div class="risk" style="color:${color}">${label}</div>`
+    +`<div class="small">Model dsv.ml.ftr_risk_classifier scored this ${c}/${m}/${ct} booking.</div>`;
 }
 load();
 </script></body></html>"""

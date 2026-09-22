@@ -1,0 +1,16 @@
+=== DSV FTR risk — ML serving endpoint (dsv-ftr-risk) live scoring ===
+2026-09-22T14:24:51Z · model dsv.ml.ftr_risk_classifier v1
+
+REQUEST (2 bookings: a high-risk FAX_OCR/healthcare/air, and a clean API/road):
+{"dataframe_records":[
+ {"mode":"AIR","channel":"FAX_OCR","customer_type":"HEALTHCARE","origin_hub":"FRA","destination_hub":"JFK","service_code":"EXP-12","lead_time_days":1.0,"weight_kg":12.0,"volume_m3":0.08,"capacity_utilization":0.5,"is_international":1},
+ {"mode":"ROAD","channel":"API","customer_type":"SPARE_PARTS","origin_hub":"AMS","destination_hub":"FRA","service_code":"STD-EOD","lead_time_days":6.0,"weight_kg":40.0,"volume_m3":0.3,"capacity_utilization":0.4,"is_international":1}
+]}
+
+RESPONSE:
+{
+  "predictions": [
+    1,
+    0
+  ]
+}

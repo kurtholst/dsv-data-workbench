@@ -72,3 +72,16 @@ Both built by dashboard/build_dashboards.py against the dsv.gold marts and publi
 ### Genie space
 - DSV Parcel Express — Data Workbench: /genie/rooms/01f1b68e95721a3794aeba7cf820b791
   (see evidence/09_genie_transcript.txt for the natural-language Q&A transcript)
+
+======================================================================
+### Live ML scoring through the app (browser -> app -> serving endpoint -> UC model)
+(after granting the app service principal CAN_QUERY on dsv-ftr-risk)
+
+GET /api/score?channel=FAX_OCR&mode=AIR&customer_type=HEALTHCARE
+ -> {"needs_correction_risk":[1], ...}   # FLAGGED for pre-check (high risk)
+
+GET /api/score?channel=API&mode=ROAD&customer_type=SPARE_PARTS
+ -> {"needs_correction_risk":[0], ...}   # likely first-time-right (clean)
+
+Demonstrates the full intelligence path is wired into the business app: the ML model's
+booking-time risk score is available to route risky bookings for pre-emptive checks.

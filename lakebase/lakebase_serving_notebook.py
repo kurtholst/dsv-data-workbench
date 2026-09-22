@@ -17,18 +17,22 @@
 
 # COMMAND ----------
 
-import uuid, psycopg2
+import uuid, json, psycopg2
 from databricks.sdk import WorkspaceClient
 
 INSTANCE = "dsv-workbench-db"
 w = WorkspaceClient()
-inst = w.database.get_database_instance(name=INSTANCE)
-host = inst.read_write_dns
-cred = w.database.generate_database_credential(request_id=str(uuid.uuid4()), instance_names=[INSTANCE])
 user = w.current_user.me().user_name
 
+# Use the REST API directly (SDK build here lacks the .database helper).
+inst = w.api_client.do("GET", f"/api/2.0/database/instances/{INSTANCE}")
+host = inst["read_write_dns"]
+cred = w.api_client.do("POST", "/api/2.0/database/credentials",
+                       body={"request_id": str(uuid.uuid4()), "instance_names": [INSTANCE]})
+token = cred["token"]
+
 conn = psycopg2.connect(host=host, dbname="databricks_postgres", user=user,
-                        password=cred.token, sslmode="require", port=5432)
+                        password=token, sslmode="require", port=5432)
 conn.autocommit = True
 cur = conn.cursor()
 print("connected to Lakebase:", host)

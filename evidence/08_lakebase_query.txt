@@ -1,0 +1,26 @@
+=== DSV Lakebase operational serving — query evidence ===
+instance: dsv-workbench-db  host: ep-lively-math-d7fvck3d.database.eu-central-1.cloud.databricks.com
+database: databricks_postgres  schema: public
+
+-- booking_kpi_snapshot (operational KPI table) --
+  amendment_rate         0.2168
+  automation_share       0.6208
+  avg_lead_time_days     5.2060
+  ftr_rate               0.8234
+  no_show_rate           0.0129
+
+-- booking_serving row count: 5000
+
+-- FTR by channel (served from Lakebase Postgres) --
+  API        n=1714   ftr=0.887
+  EDI        n=1382   ftr=0.870
+  EMAIL      n=809    ftr=0.689
+  PORTAL     n=698    ftr=0.844
+  FAX_OCR    n=397    ftr=0.542
+
+-- sample operational lookups (latest 5) --
+  BK-002025172761 | EDI | OCEAN | CPH-CDG | True
+  BK-002025049536 | API | ROAD | JFK-CPH | True
+  BK-002025111174 | API | AIR | HKG-ARN | True
+  BK-002025362648 | PORTAL | ROAD | FRA-HAM | True
+  BK-002025246227 | EDI | ROAD | DXB-FRA | True
