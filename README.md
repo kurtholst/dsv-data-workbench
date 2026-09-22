@@ -53,3 +53,25 @@ python data_gen/generate_bookings.py --rows 400000 --shards 8
 ```
 
 Target workspace: `dbc-0e21d0b3-3b8f.cloud.databricks.com` (Unity Catalog `dsv`).
+
+## Live resources (deployed & verified)
+
+| Resource | Identifier |
+|---|---|
+| Unity Catalog | catalog `dsv` (schemas `bronze`/`silver`/`gold`/`ml`) |
+| Lakeflow pipeline | `dsv-bookings-medallion` (`dc240222-2616-48fe-a518-4992501fa845`) — ran, 400k rows |
+| Lakebase instance | `dsv-workbench-db` (Postgres, operational serving) |
+| UC ML model | `dsv.ml.ftr_risk_classifier` v1 → serving endpoint `dsv-ftr-risk` |
+| GenAI | `dsv.gold.defect_classification_flat` (ai_query / Claude) |
+| Genie space | `01f1b68e95721a3794aeba7cf820b791` |
+| Databricks App | `dsv-workbench` → https://dsv-workbench-7474645762379949.aws.databricksapps.com |
+| Dashboard — Quality | `/dashboardsv3/01f1b68f91c213658750804855dc8418` |
+| Dashboard — Volume | `/dashboardsv3/01f1b68f924e1b84803bfe47a80397d9` |
+
+## Business deck
+
+See [`deck/`](deck/) for the Demo2Win business presentation (executive sponsor + architect audience).
+
+## Build provenance
+
+Built with Claude Code — see [`CONVERSATION_ID.md`](CONVERSATION_ID.md).
